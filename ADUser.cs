@@ -1,9 +1,20 @@
-﻿using System.DirectoryServices;
+﻿using System;
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.DirectoryServices;
+
+// TODO: Convert this to use the newer System.DirectoryServices.AccountManagement approach.
+// https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement?view=dotnet-plat-ext-7.0&redirectedfrom=MSDN
+//
 
 namespace User_Administration_Dashboard
 {
-    class ADUser
+    class ADUser : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         private DirectoryEntry _directoryEntry;
 
         public ADUser(DirectoryEntry directoryEntry)
@@ -11,56 +22,96 @@ namespace User_Administration_Dashboard
             _directoryEntry = directoryEntry;
         }
 
-        public string firstName
+        public void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, e);
+            }
+        }
+
+        public string FirstName
         {
             get { return _directoryEntry.Properties["givenname"].Value?.ToString(); }
         }
-        public string lastName
+        public string LastName
         {
             get { return _directoryEntry.Properties["sn"].Value?.ToString(); }
         }
 
-        public string emailAddress
+        public string EmailAddress
         {
             get { return _directoryEntry.Properties["mail"].Value?.ToString(); }
         }
 
-        public string city
+        public string City
         {
             get { return _directoryEntry.Properties["l"].Value?.ToString(); }
         }
 
-        public string state
+        public string State
         {
             get { return _directoryEntry.Properties["st"].Value?.ToString(); }
         }
 
-        public string title
+        public string Title
         {
             get { return _directoryEntry.Properties["title"].Value?.ToString(); }
         }
-        public string department
+        public string Department
         {
             get { return _directoryEntry.Properties["department"].Value?.ToString(); }
         }
-        public string manager
+        public string Manager
         {
             get {
                 string manager = _directoryEntry.Properties["manager"].Value?.ToString();
-                manager = manager.Split(',')[0];
-                manager = manager.Split('=')[1];
+
+                if (manager != null)
+                {
+                    manager = manager.Split(',')[0];
+                    manager = manager.Split('=')[1];
+                }
+                else
+                {
+                    manager = "Not set!";
+                }
                 return manager;
             }
         }
 
-        public bool lockedout
+        public bool Lockedout
         {
             get
             {
-                string lockouttime = _directoryEntry.Properties["lockouttime"].Value?.ToString();
-
-                return lockouttime is null ? false : true;
+                return false;
+                return Convert.ToBoolean(_directoryEntry.InvokeGet("IsAccountLocked"));
+                //return lockouttime is null ? false : true;
             }
         }
+
+        public ObservableCollection<string> Groups 
+        {
+            get
+            {
+                ObservableCollection<string> groups = new ObservableCollection<string>();
+
+                object g = _directoryEntry.Invoke("Groups");
+                foreach (object ob in (IEnumerable)g)
+                {
+                    DirectoryEntry group = new DirectoryEntry(ob);
+
+                    string groupName = group.Name;
+
+                    groupName = groupName.Split(',')[0];
+                    groupName = groupName.Split('=')[1];
+
+                    groups.Add(groupName);
+                }
+
+                return groups;
+            }
+        }
+
     }
 }

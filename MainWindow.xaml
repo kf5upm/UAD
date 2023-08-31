@@ -28,17 +28,17 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Margin="0 0 10 0" Grid.Column="0">
                             <TextBlock>First Name</TextBlock>
-                            <TextBox x:Name="FirstName" IsReadOnly="True" Background="#eee" Text="{Binding firstName, Mode=OneWay}" />
+                            <TextBox x:Name="FirstName" IsReadOnly="True" Background="#eee" Text="{Binding FirstName, Mode=OneWay}" />
 
 
                         </StackPanel>
                         <StackPanel Margin="10 0 0 0" Grid.Column="1">
                             <TextBlock>Last Name</TextBlock>
-                            <TextBox x:Name="LastName" IsReadOnly="True" Background="#eee" Text="{Binding lastName, Mode=OneWay}" />
+                            <TextBox x:Name="LastName" IsReadOnly="True" Background="#eee" Text="{Binding LastName, Mode=OneWay}" />
                         </StackPanel>
                     </Grid>
                     <TextBlock>E-Mail Address</TextBlock>
-                    <TextBox x:Name="EmailAddress" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding emailAddress, Mode=OneWay}" />
+                    <TextBox x:Name="EmailAddress" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding EmailAddress, Mode=OneWay}" />
                     <Grid Margin="0 0 0 10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -46,11 +46,11 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Margin="0 0 10 0" Grid.Column="0">
                             <TextBlock>City</TextBlock>
-                            <TextBox x:Name="City" IsReadOnly="True" Background="#eee" Text="{Binding city, Mode=OneWay}" />
+                            <TextBox x:Name="City" IsReadOnly="True" Background="#eee" Text="{Binding City, Mode=OneWay}" />
                         </StackPanel>
                         <StackPanel Margin="10 0 0 0" Grid.Column="1">
                             <TextBlock>State</TextBlock>
-                            <TextBox x:Name="State" IsReadOnly="True" Background="#eee" Text="{Binding state, Mode=OneWay}" />
+                            <TextBox x:Name="State" IsReadOnly="True" Background="#eee" Text="{Binding State, Mode=OneWay}" />
                         </StackPanel>
                     </Grid>
                 </StackPanel>
@@ -59,11 +59,11 @@
                 <StackPanel>
                     <StackPanel Margin="0 0 0 10">
                         <TextBlock>Title</TextBlock>
-                        <TextBox x:Name="Title" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding title, Mode=OneWay}" />
+                        <TextBox x:Name="Title" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding Title, Mode=OneWay}" />
                         <TextBlock>Department</TextBlock>
-                        <TextBox x:Name="Department" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding department, Mode=OneWay}" />
+                        <TextBox x:Name="Department" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding Department, Mode=OneWay}" />
                         <TextBlock>Manager</TextBlock>
-                        <TextBox x:Name="Manager" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding manager, Mode=OneWay}" />
+                        <TextBox x:Name="Manager" IsReadOnly="True" Background="#eee" Margin="0 0 0 5" Text="{Binding Manager, Mode=OneWay}" />
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -75,7 +75,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0">Account Locked?</TextBlock>
-                        <Button Grid.Column="1" IsEnabled="{Binding lockedout}">Unlock Account</Button>
+                        <Button Grid.Column="1" IsEnabled="False">Unlock Account</Button>
                     </Grid>
                     <Grid Margin="0 0 0 5">
                         <Grid.ColumnDefinitions>
@@ -86,9 +86,26 @@
                         <Button Grid.Column="1" IsEnabled="False">Change</Button>
                     </Grid>
                     <TextBlock Margin="0 0 0 5">Group Membership</TextBlock>
-                    <DataGrid Margin="0 0 0 5" MinHeight="200">
+                    <DataGrid x:Name="GroupsGrid" 
+                              ItemsSource="{Binding Groups}" 
+                              AutoGenerateColumns="False" 
+                              Margin="0 0 0 5" 
+                              MinHeight="200" 
+                              MaxHeight="200"
+                              VerticalScrollBarVisibility="Auto" GridLinesVisibility="None" HorizontalGridLinesBrush="#FF444141" AlternatingRowBackground="#FFA8CCED" AlternationCount="2">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="White" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Blue"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" />
+                            <DataGridTextColumn Header="Name" Width="200" Binding="{Binding}" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid>
@@ -96,8 +113,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Margin="0 0 5 0">Add Group</Button>
-                        <Button Grid.Column="1" Margin="5 0 0 0">Remove Group</Button>
+                        <Button IsEnabled="False" Grid.Column="0" Margin="0 0 5 0">Add Group</Button>
+                        <Button IsEnabled="False" Grid.Column="1" Margin="5 0 0 0">Remove Group</Button>
                     </Grid>
                 </StackPanel>
             </GroupBox>

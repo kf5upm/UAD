@@ -1,0 +1,4 @@
+﻿Notes on building this in an ASP.NET WebApp.
+https://www.sensibledev.com/how-to-get-user-details-from-active-directory/
+
+https://ianatkinson.net/computing/adcsharp.htm
